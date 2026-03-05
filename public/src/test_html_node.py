@@ -1,5 +1,5 @@
 import unittest
-from htmlnode import LeafNode
+from htmlnode import LeafNode, ParentNode
 
 class TestLeafNode(unittest.TestCase):
     
@@ -16,6 +16,22 @@ class TestLeafNode(unittest.TestCase):
         # Testing that it works for other tags like 'i' (italics)
         node = LeafNode("i", "italic text")
         self.assertEqual(node.to_html(), "<i>italic text</i>")
+
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
+
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>",
+        )
+
+
 
 if __name__ == "__main__":
     unittest.main()
